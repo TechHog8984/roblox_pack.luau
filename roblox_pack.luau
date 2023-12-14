@@ -1,13 +1,11 @@
--- DEV NOTE: see https://create.roblox.com/docs/reference/engine/datatypes
-
 --[=[
 	File: roblox_pack.luau
 	Creation Date: December 12, 2023
 	Repo: https://github.com/TechHog8984/roblox_pack.luau
 	Description:
-		a library for converting Roblox data types to and from text
+	a library for converting Roblox data types to and from text
 	For licensing info, see LICENSE
-	Feel free to contribute!
+	Feel free to contribute! see https://create.roblox.com/docs/reference/engine/datatypes
 ]=]
 
 -- NOTE: Instances are converted to and from paths
