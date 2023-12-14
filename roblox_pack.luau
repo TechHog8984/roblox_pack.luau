@@ -99,9 +99,6 @@ function String:removeRange(from, to)
 	if self.length < 1 then
 		error("attempted to remove a character from an empty string");
 	end;
-    -- if from == to then
-    --     error("from and to are equal for removeRange. use remove instead");
-    -- end;
     if from > to then
         error("from is bigger than to for removeRange. to should be bigger than from");
     end;
@@ -608,14 +605,12 @@ local encode_table; encode_table = {
 		local xyz_all_zero = (x == 0) and (y == 0) and (z == 0);
 		local xyz = boolToBit(xyz_all_zero);
 		if not xyz_all_zero then
-			-- xyz ..= x .. '_' .. y .. '_' .. z .. '_';
 			xyz ..= encode(x) .. encode(y) .. encode(z);
 		end;
 
 		local rotation_all_zero = (R00 == 0) and (R01 == 0) and (R02 == 0) and (R10 == 0) and (R11 == 0) and (R12 == 0) and (R20 == 0) and (R21 == 0) and (R22 == 0);
 		local rotation = boolToBit(rotation_all_zero);
 		if not rotation_all_zero then
-			-- rotation ..= R00 .. '_' .. R01 .. '_' .. R02 .. '_' .. R10 .. '_' .. R11 .. '_' .. R12 .. '_' .. R20 .. '_' .. R21 .. '_' .. R22;
 			rotation ..= encode(R00) .. encode(R01) .. encode(R02) .. encode(R10) .. encode(R11) .. encode(R12) .. encode(R20) .. encode(R21) .. encode(R22);
 		end;
 
