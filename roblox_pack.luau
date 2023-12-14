@@ -2,7 +2,6 @@
 
 --[=[
 	File: roblox_pack.luau
-	Creator: techhog
 	Creation Date: December 12, 2023
 	Repo: https://github.com/TechHog8984/roblox_pack.luau
 	Description:
