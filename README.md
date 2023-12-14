@@ -14,19 +14,12 @@ roblox_pack.unpack(packed: string) -> {any}
 
 # Example:
 ```lua
-local roblox_pack = require(game.ReplicatedStorage:WaitForChild("roblox_pack")
+local roblox_pack = require(game.ReplicatedStorage:WaitForChild("roblox_pack"))
 local data = {Vector2.zero, Vector3.zero, Vector2.new(0, 10)}
 local packed = roblox_pack.pack(data)
 print(packed)
 local unpacked = roblox_pack.unpack(packed)
 print(unpacked)
 ```
-### Output (console):
-```
-{[1]=rv2_1,[2]=rv3_1,[3]=rv2_01010_}
-{
-    [1] = 0, 0,
-    [2] = 0, 0, 0,
-    [3] = 0, 10
-}
-```
+### Output:
+![example output](assets/example_output.png)
