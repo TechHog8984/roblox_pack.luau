@@ -3,7 +3,7 @@ local roblox_pack = require(script.roblox_pack);
 local total = 0;
 local failed_count = 0;
 local succeeded_count = 0;
--- checkEqual exists because numbers suck and Color3 == Color3 will return false when they are the same color because the r/g/b is off by 0.000001
+-- checkEqual exists because numbers suck and Color3 == Color3 will return false when they are the same color if the r/g/b is off by 0.000001
 local function test(data_type, value, checkEqual)
     total += 1;
 	local data = {value};
