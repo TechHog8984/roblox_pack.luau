@@ -566,7 +566,9 @@ end;
 local encode_table; encode_table = {
 	["nil"] = function() return 'n'; end,
 	boolean = function(value) return 'b' .. boolToBit(value); end,
-	number = tostring,
+	number = function(n)
+		return 'i' .. string.pack('n', n) .. '_';
+	end,
 	string = serialize,
 	table = pack,
 
@@ -580,7 +582,7 @@ local encode_table; encode_table = {
 		return "ra_" .. faces[AXIS_X] ..faces[AXIS_Y] .. faces[AXIS_Z];
 	end,
 	BrickColor = function(value)
-		return "rb_" .. value.Number;
+		return "rb_" .. encode(value.Number);
 	end,
 	CatalogSearchParams = constructorEncoder("rcsp_", CatalogSearchParams),
 	CFrame = function(value)
@@ -606,13 +608,15 @@ local encode_table; encode_table = {
 		local xyz_all_zero = (x == 0) and (y == 0) and (z == 0);
 		local xyz = boolToBit(xyz_all_zero);
 		if not xyz_all_zero then
-			xyz ..= x .. '_' .. y .. '_' .. z .. '_';
+			-- xyz ..= x .. '_' .. y .. '_' .. z .. '_';
+			xyz ..= encode(x) .. encode(y) .. encode(z);
 		end;
 
 		local rotation_all_zero = (R00 == 0) and (R01 == 0) and (R02 == 0) and (R10 == 0) and (R11 == 0) and (R12 == 0) and (R20 == 0) and (R21 == 0) and (R22 == 0);
 		local rotation = boolToBit(rotation_all_zero);
 		if not rotation_all_zero then
-			rotation ..= R00 .. '_' .. R01 .. '_' .. R02 .. '_' .. R10 .. '_' .. R11 .. '_' .. R12 .. '_' .. R20 .. '_' .. R21 .. '_' .. R22;
+			-- rotation ..= R00 .. '_' .. R01 .. '_' .. R02 .. '_' .. R10 .. '_' .. R11 .. '_' .. R12 .. '_' .. R20 .. '_' .. R21 .. '_' .. R22;
+			rotation ..= encode(R00) .. encode(R01) .. encode(R02) .. encode(R10) .. encode(R11) .. encode(R12) .. encode(R20) .. encode(R21) .. encode(R22);
 		end;
 
 		return "rcf_0" .. xyz .. rotation;
@@ -626,13 +630,13 @@ local encode_table; encode_table = {
 		for _, point in next, value.Keypoints do
 			points ..= snipEncoded(encode(point));
 		end;
-		return "rcs_" .. length .. '_' .. points;
+		return "rcs_" .. encode(length) .. points;
 	end,
 	ColorSequenceKeypoint = function(value)
-		return "rcsk_" .. value.Time .. '_' .. value.Value:ToHex();
+		return "rcsk_" .. encode(value.Time) .. value.Value:ToHex();
 	end,
     DateTime = function(value)
-        return "rd_" .. value.UnixTimestampMillis;
+        return "rd_" .. encode(value.UnixTimestampMillis);
     end,
     Enum = function(value)
         return "re_" .. tostring(value);
@@ -644,7 +648,7 @@ local encode_table; encode_table = {
         return "rf_" .. boolToBit(value.Top) .. boolToBit(value.Bottom) .. boolToBit(value.Left) .. boolToBit(value.Right) .. boolToBit(value.Back) .. boolToBit(value.Front);
     end,
     FloatCurveKey = function(value)
-        return "rfc_" .. value.Interpolation.Value .. value.Time .. '_' .. value.Value;
+        return "rfc_" .. value.Interpolation.Value .. encode(value.Time) .. encode(value.Value);
     end,
     Font = function(value)
         return "rft_" .. value.Style.Value .. value.Weight.Value/100 .. serialize(value.Family);
@@ -668,7 +672,7 @@ local encode_table; encode_table = {
 		return "ri_game" .. path .. ';';
 	end,
     NumberRange = function(value)
-        return "rn_" .. value.Min .. (if value.Min == value.Max then '' else ('_' .. value.Max));
+        return "rn_" .. encode(value.Min) .. (if value.Min == value.Max then '1' else ('0' .. encode(value.Max)));
     end,
     NumberSequence = function(value)
         local length = #value.Keypoints;
@@ -676,10 +680,10 @@ local encode_table; encode_table = {
         for _, point in next, value.Keypoints do
             points ..= snipEncoded(encode(point)) .. ',';
         end;
-        return "rns_" .. length .. '_' .. points:sub(1, -2);
+        return "rns_" .. encode(length) .. points:sub(1, -2);
     end,
     NumberSequenceKeypoint = function(value)
-        return "rnsk_" .. value.Time .. '_' .. value.Value .. '_' .. (if value.Envelope == 0 then '0' else ('1' .. value.Envelope));
+        return "rnsk_" .. encode(value.Time) .. encode(value.Value) .. (if value.Envelope == 0 then '0' else ('1' .. encode(value.Envelope)));
     end,
 	OverlapParams = constructorEncoder("ro_", OverlapParams),
 	PathWaypoint = function(value)
@@ -687,7 +691,7 @@ local encode_table; encode_table = {
 		return "rp_" .. (value.Action.Value + 1) .. position .. '_' .. serialize(value.Label);
 	end,
 	PhysicalProperties = function(value)
-		return "rpp_" .. value.Density .. '_' .. value.Friction .. '_' .. value.Elasticity .. '_' .. value.FrictionWeight .. '_' .. value.ElasticityWeight;
+		return "rpp_" .. encode(value.Density) .. encode(value.Friction) .. encode(value.Elasticity) .. encode(value.FrictionWeight) .. encode(value.ElasticityWeight);
 	end,
 	Ray = function(value)
 		return "rr_" .. encodeAndSnip(value.Origin) .. '_' .. encodeAndSnip(value.Direction);
@@ -697,10 +701,10 @@ local encode_table; encode_table = {
 		return "rrc_" .. encodeAndSnip(value.Min) .. '_' .. encodeAndSnip(value.Max);
 	end,
 	TweenInfo = function(value)
-		return "rt_" .. boolToBit(value.Reverses) .. (value.EasingDirection.Value + 1) .. (value.EasingStyle.Value + 1) .. '_' .. value.Time .. '_' .. value.DelayTime .. '_' .. value.RepeatCount;
+		return "rt_" .. boolToBit(value.Reverses) .. (value.EasingDirection.Value + 1) .. encode(value.EasingStyle.Value + 1) .. encode(value.Time) .. encode(value.DelayTime) .. encode(value.RepeatCount);
 	end,
 	UDim = function(value)
-		return "ru_" .. value.Scale .. '_' .. value.Offset;
+		return "ru_" .. encode(value.Scale) .. encode(value.Offset);
 	end,
 	UDim2 = function(value)
 		return "ru2_" .. encodeAndSnip(value.X) .. '_' .. encodeAndSnip(value.Y);
@@ -717,8 +721,8 @@ local encode_table; encode_table = {
 		if both_zero then
 			x, y = '','';
 		else
-			x = if x_is_zero then '1' else ('0' .. x .. '_');
-			y = if y_is_zero then '1' else ('0' .. y .. '_');
+			x = if x_is_zero then '1' else ('0' .. encode(x));
+			y = if y_is_zero then '1' else ('0' .. encode(y));
 		end;
 
 		return "rv2_" .. boolToBit(both_zero) .. x .. y;
@@ -740,9 +744,9 @@ local encode_table; encode_table = {
 		if all_zero then
 			x, y, z = '','','';
 		else
-			x = if x_is_zero then '1' else ('0' .. x .. '_');
-			y = if y_is_zero then '1' else ('0' .. y .. '_');
-			z = if z_is_zero then '1' else ('0' .. z .. '_');
+			x = if x_is_zero then '1' else ('0' .. encode(x));
+			y = if y_is_zero then '1' else ('0' .. encode(y));
+			z = if z_is_zero then '1' else ('0' .. encode(z));
 		end;
 
 		return "rv3_" .. boolToBit(all_zero) .. x .. y .. z;
@@ -778,10 +782,10 @@ local function decodeVector2(input)
 	end;
 
 	if not bitToBool(input:readDigit()) then
-		x = input:readNumberThenRemove('_');
+		x = decode(input);
 	end;
 	if not bitToBool(input:readDigit()) then
-		y = input:readNumberThenRemove('_');
+		y = decode(input);
 	end;
 
 	return x,y;
@@ -795,13 +799,13 @@ local function decodeVector3(input)
 	end;
 
 	if not bitToBool(input:readDigit()) then
-		x = input:readNumberThenRemove('_');
+		x = decode(input);
 	end;
 	if not bitToBool(input:readDigit()) then
-		y = input:readNumberThenRemove('_');
+		y = decode(input);
 	end;
 	if not bitToBool(input:readDigit()) then
-		z = input:readNumberThenRemove('_');
+		z = decode(input);
 	end;
 
 	return x,y,z;
@@ -817,7 +821,7 @@ local roblox_decode_table;roblox_decode_table = {
 		return Axes.new(table.unpack(faces));
 	end,
 	b = function(input) -- BrickColor
-		return BrickColor.new(input:readNumber());
+		return BrickColor.new(decode(input));
 	end,
     csp = constructorDecoder(CatalogSearchParams),
 	cf = function(input) -- CFrame
@@ -829,15 +833,15 @@ local roblox_decode_table;roblox_decode_table = {
 		if not all_zero then
 			local xyz_all_zero = bitToBool(input:readDigit());
 			if not xyz_all_zero then
-				x, y, z = input:readNumberThenRemove('_'), input:readNumberThenRemove('_'), input:readNumberThenRemove('_');
+				x, y, z = decode(input), decode(input), decode(input);
 			end;
 			local rotation_all_zero = bitToBool(input:readDigit());
 			if not rotation_all_zero then
 				R00, R01, R02,
 				R10, R11, R12,
-				R20, R21, R22 = input:readNumberThenRemove('_'), input:readNumberThenRemove('_'), input:readNumberThenRemove('_'),
-				input:readNumberThenRemove('_'), input:readNumberThenRemove('_'), input:readNumberThenRemove('_'),
-				input:readNumberThenRemove('_'), input:readNumberThenRemove('_'), input:readNumber();
+				R20, R21, R22 = decode(input), decode(input), decode(input),
+				decode(input), decode(input), decode(input),
+				decode(input), decode(input), decode(input);
 			end;
 		end;
 
@@ -852,17 +856,17 @@ local roblox_decode_table;roblox_decode_table = {
 	end,
 	cs = function(input) -- ColorSequence
 		local keypoints = {};
-		local length = input:readNumberThenRemove('_');
+		local length = decode(input);
 		for index = 1, length do
 			keypoints[index] = roblox_decode_table.csk(input);
 		end;
 		return ColorSequence.new(keypoints);
 	end,
 	csk = function(input) -- ColorSequenceKeypoint
-		return ColorSequenceKeypoint.new(input:readNumberThenRemove('_'), Color3.fromHex(input:removeRange(1, 6)));
+		return ColorSequenceKeypoint.new(decode(input), Color3.fromHex(input:removeRange(1, 6)));
 	end,
     d = function(input) -- DateTime
-        return DateTime.fromUnixTimestampMillis(input:readNumber());
+        return DateTime.fromUnixTimestampMillis(decode(input));
     end,
     e = function(input) -- Enum
         return Enum[input:readUntilPatternOptional('[^%w]')];
@@ -883,13 +887,13 @@ local roblox_decode_table;roblox_decode_table = {
 		return Faces.new(table.unpack(faces));
     end,
     fc = function(input) -- FloatCurveKey
-        local interpolation = KEY_INTERPOLATION_MODE[tonumber(input:remove(1)) + 1];
+        local interpolation = KEY_INTERPOLATION_MODE[input:readDigit() + 1];
 
-        return FloatCurveKey.new(input:readNumberThenRemove('_'), input:readNumber(), interpolation);
+        return FloatCurveKey.new(decode(input), decode(input), interpolation);
     end,
     ft = function(input) -- Font
-        local style = FONT_STYLE[tonumber(input:remove(1)) + 1];
-        local weight = FONT_WEIGHT[tonumber(input:remove(1))];
+        local style = FONT_STYLE[input:readDigit() + 1];
+        local weight = FONT_WEIGHT[input:readDigit()];
 
 		local family = input:readString();
         return Font.new(family, weight, style);
@@ -931,13 +935,14 @@ local roblox_decode_table;roblox_decode_table = {
 		return value;
 	end,
     n = function(input) -- NumberRange
-        local min = input:readNumberThenRemoveOptional('_');
+        local min = decode(input);
+		local max = if bitToBool(input:readDigit()) then min else decode(input);
 
-        return NumberRange.new(min, if input.is_empty then min else input:readNumber());
+        return NumberRange.new(min, max);
     end,
     ns = function(input) -- NumberSequence
         local keypoints = {};
-        local length = input:readNumberThenRemove('_');
+        local length = decode(input);
         for index = 1, length do
             keypoints[index] = roblox_decode_table.nsk(input);
 			if input[1] == ',' then
@@ -947,11 +952,11 @@ local roblox_decode_table;roblox_decode_table = {
         return NumberSequence.new(keypoints);
     end,
     nsk = function(input) -- NumberSequenceKeypoint
-        local time = input:readNumberThenRemove('_');
-        local value = input:readNumberThenRemove('_');
+        local time = decode(input);
+        local value = decode(input);
 		local envelope;
         if bitToBool(input:readDigit()) then
-			envelope = input:readNumber();
+			envelope = decode(input);
 		end;
 
         return NumberSequenceKeypoint.new(time, value, envelope);
@@ -967,11 +972,11 @@ local roblox_decode_table;roblox_decode_table = {
 	end,
 	pp = function(input) -- PhysicalProperties
 		return PhysicalProperties.new(
-			input:readNumberThenRemove('_'),
-			input:readNumberThenRemove('_'),
-			input:readNumberThenRemove('_'),
-			input:readNumberThenRemove('_'),
-			input:readNumber()
+			decode(input),
+			decode(input),
+			decode(input),
+			decode(input),
+			decode(input)
 		);
 	end,
 	r = function(input) -- Ray
@@ -988,12 +993,12 @@ local roblox_decode_table;roblox_decode_table = {
 	t = function(input) -- TweenInfo
 		local reverses = bitToBool(input:readDigit());
 		local direction = EASING_DIRECTION[input:readDigit()];
-		local style = EASING_STYLE[input:readNumberThenRemove('_')];
-		local time, delay, repeat_count = input:readNumberThenRemove('_'), input:readNumberThenRemove('_'), input:readNumber();
+		local style = EASING_STYLE[decode(input)];
+		local time, delay, repeat_count = decode(input), decode(input), decode(input);
 		return TweenInfo.new(time, style, direction, repeat_count, reverses, delay);
 	end,
 	u = function(input) -- UDim
-		return UDim.new(input:readNumberThenRemove('_'), input:readNumber());
+		return UDim.new(decode(input), decode(input));
 	end,
 	u2 = function(input) -- UDim2
 		local x = roblox_decode_table.u(input);
@@ -1029,11 +1034,14 @@ decode = function(input)
     local raw = input.raw;
     local char = input[1];
     if raw == 'n' then
+		input:remove(1);
         return nil;
     elseif char == 'b' then
-        return bitToBool(input[2]);
-    elseif isDigit(input.bytes[1]) or char == '-' or char == '.' then
-        return input:readNumber();
+		input:remove(1);
+        return bitToBool(input:remove(1));
+	elseif char == 'i' then
+		input:remove(1);
+		return (string.unpack('n', input:readUntil('_')));
     elseif char == quote then
         return input:readString();
     elseif char == '{' then
@@ -1047,7 +1055,7 @@ decode = function(input)
 		end;
 		return roblox_decode_table[index](input);
 	end;
-	error("Error when decoding: failed to decode (invalid value)");
+	error("Error when decoding: failed to decode (invalid value): " .. input.raw);
 end;
 
 pack = function(data)
