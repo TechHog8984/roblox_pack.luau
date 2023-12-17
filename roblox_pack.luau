@@ -37,29 +37,27 @@ function String:__index(key)
 end;
 
 function String.new(str)
-	return setmetatable({
-		characters = setmetatable({}, characters_metatable),
-		bytes = {}
-	}, String):set(str);
-end;
-
-function String:set(str)
+	local characters, bytes = setmetatable({}, characters_metatable), {};
 	local length = 0;
 
-	table.clear(self.characters);
-	table.clear(self.bytes);
+	table.clear(characters);
+	table.clear(bytes);
 
 	str:gsub('.', function(char)
 		length += 1;
-		self.characters[length] = char;
-		self.bytes[length] = char:byte();
+		characters[length] = char;
+		bytes[length] = char:byte();
 	end);
-	self.characters.negative_offset = length + 1;
+	characters.negative_offset = length + 1;
 
-	self.raw = str;
-	self.length = length;
-	self.is_empty = length < 1;
-	return self;
+	return setmetatable({
+		raw = str,
+		length = length,
+		is_empty = length < 1,
+
+		characters = characters,
+		bytes = bytes
+	}, String);
 end;
 
 function String:startsWith(query)
