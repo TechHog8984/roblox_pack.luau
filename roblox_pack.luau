@@ -152,17 +152,6 @@ function String:readNumberThenRemove(char, index)
 	self:remove(index);
 	return num;
 end;
-function String:readNumberThenRemoveOptional(char, index)
-    index = index or 1;
-	local num = self:readNumber(index);
-	if self[index] == char then
-        if self.is_empty then
-            error("Failed to read number then remove: string is empty after read");
-        end;
-        self:remove(index);
-	end;
-	return num;
-end;
 
 function String:readDigit(index)
 	index = index or 1;
