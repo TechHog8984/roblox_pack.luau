@@ -108,7 +108,7 @@ function String:removeRange(from, to)
     return characters_removed;
 end;
 
-function String:readNumberString(index)
+function String:readNumber(index)
 	index = index or 1;
 	if not isDigit(self.bytes[index]) and self[index] ~= '-' and self[index] ~= '.' then
 		error("Failed to read number: the byte at index " .. index .. " isn't a number, negative symbol, or period: " .. self[index]);
@@ -138,10 +138,7 @@ function String:readNumberString(index)
 		self:remove(index);
 	end;
 
-	return number_str;
-end;
-function String:readNumber(index)
-	return tonumber(self:readNumberString(index));
+	return tonumber(number_str);
 end;
 function String:readNumberThenRemove(char, index)
     index = index or 1;
