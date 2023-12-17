@@ -60,20 +60,6 @@ function String.new(str)
 	}, String);
 end;
 
-function String:startsWith(query)
-	if self.length < #query then
-		return false;
-	end;
-	if self.raw == query then
-		return true;
-	end;
-	local buffer = '';
-	for i = 1, #query do
-		buffer ..= self[i];
-	end;
-	return buffer == query;
-end;
-
 function String:remove(index)
 	if self.length < 1 then
 		error("attempted to remove a character from an empty string");
@@ -893,11 +879,10 @@ local roblox_decode_table;roblox_decode_table = {
     end,
 	i = function(input) -- Instance
 		local raw = input.raw;
-		if not input:startsWith("game") then
+		if input.length < 4 or input:removeRange(1,4) ~= "game" then
 			error("Failed to read instance path: expected string starting with 'game': " .. raw);
 		end;
 		raw = raw:sub(1, -2); -- get rid of artificial semicolon at the end
-		input:removeRange(1, 4);
 
 		local value = game;
 		local char;
