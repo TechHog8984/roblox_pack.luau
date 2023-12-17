@@ -357,7 +357,7 @@ local function bitToBool(bit)
 end;
 
 local constructor_encoders = {};do
-	local function add(data_type, order, encode, decode)
+	local function createEncoder(data_type, order, encode, decode)
 		local defaults = {};
 
 		local object = data_type.new();
@@ -373,27 +373,27 @@ local constructor_encoders = {};do
 		};
 	end;
 
-	local function _serialize(value, default)
+	local function writeSerialized(value, default)
 		local is_default = value == default;
 		return boolToBit(is_default) .. if is_default then '' else serialize(value);
 	end;
-	local function number(value, default)
+	local function writeNumber(value, default)
 		local is_default = value == default;
 		return boolToBit(is_default) .. if is_default then '' else value .. '_';
 	end;
-	local function enum(value, default)
+	local function writeEnum(value, default)
 		local is_default = value == default;
 		return boolToBit(is_default) .. if is_default then '' else value.Value;
 	end;
-	local function enum_minus1(value, default)
+	local function writeEnumMinus1(value, default)
 		local is_default = value == default;
 		return boolToBit(is_default) .. if is_default then '' else value.Value - 1;
 	end;
-	local function list(value, default)
+	local function writeTable(value, default)
 		local is_default = value == default;
 		return boolToBit(is_default) .. if is_default then '' else pack(value);
 	end;
-	local function bool(value, default)
+	local function writeBool(value, default)
 		local is_default = value == default;
 		return boolToBit(is_default) .. if is_default then '' else boolToBit(value);
 	end;
@@ -405,7 +405,7 @@ local constructor_encoders = {};do
 		return bitToBool(input:readDigit());
 	end;
 
-	add(CatalogSearchParams,
+	createEncoder(CatalogSearchParams,
 		{
 			"SearchKeyword",
 			"MinPrice",
@@ -420,17 +420,17 @@ local constructor_encoders = {};do
 			"CreatorName"
 		},
 		{
-			SearchKeyword = _serialize,
-			MinPrice = number,
-			MaxPrice = number,
-			SortType = enum,
-			SortAggregation = enum_minus1,
-			CategoryFilter = enum_minus1,
-			SalesTypeFilter = enum_minus1,
-			BundleTypes = list,
-			AssetTypes = list,
-			IncludeOffSale = bool,
-			CreatorName = _serialize
+			SearchKeyword = writeSerialized,
+			MinPrice = writeNumber,
+			MaxPrice = writeNumber,
+			SortType = writeEnum,
+			SortAggregation = writeEnumMinus1,
+			CategoryFilter = writeEnumMinus1,
+			SalesTypeFilter = writeEnumMinus1,
+			BundleTypes = writeTable,
+			AssetTypes = writeTable,
+			IncludeOffSale = writeBool,
+			CreatorName = writeSerialized
 		},
 		{
 			SearchKeyword = String.readString,
@@ -453,7 +453,7 @@ local constructor_encoders = {};do
 	local function readRaycastFilterType(input)
 		return RAYCAST_FILTER_TYPE[input:readDigit()];
 	end;
-	add(OverlapParams,
+	createEncoder(OverlapParams,
 		{
 			"RespectCanCollide",
 			"BruteForceAllSlow",
@@ -463,12 +463,12 @@ local constructor_encoders = {};do
 			"FilterDescendantsInstances"
 		},
 		{
-			RespectCanCollide = bool,
-			BruteForceAllSlow = bool,
-			FilterType = enum,
-			MaxParts = number,
-			CollisionGroup = _serialize,
-			FilterDescendantsInstances = list
+			RespectCanCollide = writeBool,
+			BruteForceAllSlow = writeBool,
+			FilterType = writeEnum,
+			MaxParts = writeNumber,
+			CollisionGroup = writeSerialized,
+			FilterDescendantsInstances = writeTable
 		},
 		{
 			RespectCanCollide = readBool,
@@ -479,7 +479,7 @@ local constructor_encoders = {};do
 			FilterDescendantsInstances = "unpack"
 		}
 	);
-	add(RaycastParams,
+	createEncoder(RaycastParams,
 		{
 			"RespectCanCollide",
 			"BruteForceAllSlow",
@@ -489,12 +489,12 @@ local constructor_encoders = {};do
 			"FilterDescendantsInstances"
 		},
 		{
-			RespectCanCollide = bool,
-			BruteForceAllSlow = bool,
-			IgnoreWater = bool,
-			FilterType = enum,
-			CollisionGroup = _serialize,
-			FilterDescendantsInstances = list
+			RespectCanCollide = writeBool,
+			BruteForceAllSlow = writeBool,
+			IgnoreWater = writeBool,
+			FilterType = writeEnum,
+			CollisionGroup = writeSerialized,
+			FilterDescendantsInstances = writeTable
 		},
 		{
 			RespectCanCollide = readBool,
