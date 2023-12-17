@@ -521,8 +521,7 @@ end;
 
 local function snipEncoded(encoded)
 	encoded = String.new(encoded);
-	encoded:readUntilPattern('_');
-	encoded:remove(1);
+	encoded:readUntil('_');
 
 	return encoded.raw;
 end;
