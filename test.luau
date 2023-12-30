@@ -50,6 +50,9 @@ catalog_search_params.MaxPrice = 10000;
 catalog_search_params.BundleTypes = {Enum.BundleType.Animations, Enum.BundleType.BodyParts};
 add("CatalogSearchParams", catalog_search_params);
 add("CFrame", CFrame.new(1000, 0, -1000));
+add("Color3", BrickColor.random().Color, function(original, unpacked)
+    return (unpacked :: Color3):ToHex() == (original :: Color3):ToHex();
+end);
 local color_sequence = ColorSequence.new{
     ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 0, 0)),
     ColorSequenceKeypoint.new(0.5, Color3.fromRGB(0, 190, 200)),
