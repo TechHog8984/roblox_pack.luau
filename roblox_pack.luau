@@ -1021,7 +1021,13 @@ decode = function(input)
 	error("Error when decoding: failed to decode (invalid value): " .. input.raw);
 end;
 
-pack = function(data)
+pack = function(...)
+	local argc = select('#', ...);
+	if argc ~= 1 then
+		error(`Pack expects exactly one argument; got {argc}`);
+	end;
+
+	local data = ...;
 	if type(data) ~= "table" then
 		error(`Expected type 'table' to pack; got '{type(data)}'`);
 	end;
