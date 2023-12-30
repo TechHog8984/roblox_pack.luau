@@ -3,11 +3,11 @@
 
 ### NOTE: Instances are converted to and from paths.
 # Usage:
-### Call `pack` to convert data into a string. `pack` will wrap the passed value into a table, if it isn't one itself.
+### Call `pack` to convert data into a string. `pack` expects a table, so wrap your value(s) around a table if necessary.
 ```lua
-roblox_pack.pack(data: any) -> string
+roblox_pack.pack(data: {any}) -> string
 ```
-### Call `unpack` to convert a packed string back into the original data passed. Since `pack` ensures that the value is a table, `unpack` will return a table.
+### Call `unpack` to convert a packed string back into the original table passed.
 ```lua
 roblox_pack.unpack(packed: string) -> {any}
 ```

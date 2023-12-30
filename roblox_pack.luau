@@ -1023,7 +1023,7 @@ end;
 
 pack = function(data)
 	if type(data) ~= "table" then
-		data = {data};
+		error(`Expected type 'table' to pack; got '{type(data)}'`);
 	end;
 
 	-- no data; return empty table string
