@@ -301,7 +301,11 @@ function String:readString()
 							break;
 						end;
 					end;
-					char = string.char(tonumber(number_str));
+					local number = tonumber(number_str);
+					if not number then
+						error(`failed to get number in string: failed to convert to number '{number_str}'`);
+					end;
+					char = string.char(number);
 				else
                     error(`Error when deserializing string: unknown backslash escape character: '{char}'`);
 				end;
