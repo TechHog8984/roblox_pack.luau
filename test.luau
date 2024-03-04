@@ -87,7 +87,7 @@ add("OverlapParams", overlap_params);
 add("PathWaypoint", PathWaypoint.new(Vector3.new(10,10,10), Enum.PathWaypointAction.Walk));
 add("Ray", Ray.new(Vector3.zero, Vector3.new(0, 0, 10)));
 local raycast_params = RaycastParams.new();
-raycast_params.FilterDescendantsInstances = {workspace.Baseplate};
+raycast_params.FilterDescendantsInstances = {workspace:FindFirstChild("Baseplate")};
 raycast_params.FilterType = Enum.RaycastFilterType.Include;
 raycast_params.BruteForceAllSlow = true;
 add("RaycastParams", raycast_params);
