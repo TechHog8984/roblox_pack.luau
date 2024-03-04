@@ -1,4 +1,4 @@
-local roblox_pack = require(script.roblox_pack);
+local roblox_pack = require(script:FindFirstChild("roblox_pack"));
 
 local total = 0;
 local failed_count = 0;
