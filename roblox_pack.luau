@@ -226,7 +226,6 @@ function String:readUntilPatternOptional(query, index)
 end;
 
 local quote = '"';
-local hyphen = '-';
 
 local backslash_escape_map = {
 	['\a'] = "\\a", ['\b'] = "\\b", ['\f'] = "\\f",
