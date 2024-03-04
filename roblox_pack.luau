@@ -22,6 +22,7 @@ local characters_metatable = {
 		if key < 0 then
 			return rawget(self, self.negative_offset + key);
 		end;
+		error("invalid index");
 	end
 };
 
