@@ -995,9 +995,8 @@ decode = function(input)
 		error("Error when decoding: got empty value");
 	end;
 
-    local raw = input.raw;
     local char = input[1];
-    if raw == 'n' then
+    if char == 'n' then
 		input:remove(1);
         return nil;
     elseif char == 'b' then
