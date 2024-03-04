@@ -738,9 +738,6 @@ local function constructorDecoder(data_type)
 	end;
 end;
 
-local VECTOR2_ZERO = Vector2.zero;
-local VECTOR3_ZERO = Vector3.zero;
-
 local function decodeVector2(input)
 	local x, y = 0,0;
 
