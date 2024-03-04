@@ -87,10 +87,10 @@ function String:removeRange(from, to)
         error("from is bigger than to for removeRange. to should be bigger than from");
     end;
 	if from < 1 then
-		error("invalid from for removeRange. expected a value above 0; got " .. index);
+		error("invalid from for removeRange. expected a value above 0; got " .. from);
 	end;
 	if to > self.length then
-		error("invalid to for removeRange. expected a value no higher than the length; got " .. index);
+		error("invalid to for removeRange. expected a value no higher than the length; got " .. to);
 	end;
 
     self.raw = self.raw:sub(1, from - 1) .. self.raw:sub(to + 1, -1);
