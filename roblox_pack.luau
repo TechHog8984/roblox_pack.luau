@@ -216,7 +216,7 @@ function String:readUntilPattern(pattern, index, optional)
     end;
 
     if not optional and not found then
-        error(`Failed to read until: never reached character '{query}'`);
+        error(`Failed to read until pattern: never reached pattern '{pattern}'`);
     end;
 
     return str;
