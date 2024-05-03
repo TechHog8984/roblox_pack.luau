@@ -84,6 +84,7 @@ overlap_params.FilterDescendantsInstances = {workspace};
 overlap_params.MaxParts = 10;
 overlap_params.BruteForceAllSlow = true;
 add("OverlapParams", overlap_params);
+add("PhysicalProperties", PhysicalProperties.new(100, 100, -900, 0.5, 10));
 add("PathWaypoint", PathWaypoint.new(Vector3.new(10,10,10), Enum.PathWaypointAction.Walk));
 add("Ray", Ray.new(Vector3.zero, Vector3.new(0, 0, 10)));
 local raycast_params = RaycastParams.new();

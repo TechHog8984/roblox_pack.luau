@@ -41,7 +41,7 @@ print(unpacked)
 - [x] ColorSequence
 - [x] ColorSequenceKeypoint
 - [x] DateTime
-- [ ] DockWidgetPluginGuiInfo - TODO
+- [ ] DockWidgetPluginGuiInfo - properties are read only
 - [x] Enum
 - [x] EnumItem
 - [x] Faces
@@ -54,7 +54,7 @@ print(unpacked)
 - [x] OverlapParams
 - [ ] Path2DControlPoint - TODO
 - [x] PathWaypoint
-- [ ] PhysicalProperties - TODO
+- [x] PhysicalProperties
 - [ ] Random - no way to transfer internal state besides seed
 - [x] Ray
 - [x] RaycastParams
