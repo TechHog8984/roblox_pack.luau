@@ -57,7 +57,7 @@ print(unpacked)
 - [ ] Random - no way to transfer internal state besides seed
 - [x] Ray
 - [x] RaycastParams
-- [ ] RaycastResult
+- [ ] RaycastResult - not constructable
 - [ ] RBXScriptConnection - not constructable
 - [ ] RBXScriptSignal - not constructable
 - [x] Rect
