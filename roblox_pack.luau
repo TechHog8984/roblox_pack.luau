@@ -393,7 +393,7 @@ local constructor_encoders = {};do
 		local is_default = value == default;
 		return boolToBit(is_default) .. if is_default then '' else value.Value - 1;
 	end;
-	local function writeTable(value, default)
+	local function writePacked(value, default)
 		local is_default = value == default;
 		return boolToBit(is_default) .. if is_default then '' else pack(value);
 	end;
@@ -431,8 +431,8 @@ local constructor_encoders = {};do
 			SortAggregation = writeEnumMinus1,
 			CategoryFilter = writeEnumMinus1,
 			SalesTypeFilter = writeEnumMinus1,
-			BundleTypes = writeTable,
-			AssetTypes = writeTable,
+			BundleTypes = writePacked,
+			AssetTypes = writePacked,
 			IncludeOffSale = writeBool,
 			CreatorName = writeSerialized
 		},
@@ -472,7 +472,7 @@ local constructor_encoders = {};do
 			FilterType = writeEnum,
 			MaxParts = writeNumber,
 			CollisionGroup = writeSerialized,
-			FilterDescendantsInstances = writeTable
+			FilterDescendantsInstances = writePacked
 		},
 		{
 			RespectCanCollide = readBool,
@@ -498,7 +498,7 @@ local constructor_encoders = {};do
 			IgnoreWater = writeBool,
 			FilterType = writeEnum,
 			CollisionGroup = writeSerialized,
-			FilterDescendantsInstances = writeTable
+			FilterDescendantsInstances = writePacked
 		},
 		{
 			RespectCanCollide = readBool,
@@ -667,6 +667,9 @@ local encode_table; encode_table = {
 	RaycastParams = constructorEncoder("rrp_", RaycastParams),
 	Rect = function(value)
 		return "rrc_" .. encodeAndSnip(value.Min) .. '_' .. encodeAndSnip(value.Max);
+	end,
+	RotationCurveKey = function(value)
+		return "rro_" .. encode(value.Time) .. encode(value.Value) .. value.Interpolation.Value + 1;
 	end,
 	TweenInfo = function(value)
 		return "rt_" .. boolToBit(value.Reverses) .. (value.EasingDirection.Value + 1) .. encode(value.EasingStyle.Value + 1) .. encode(value.Time) .. encode(value.DelayTime) .. encode(value.RepeatCount);
@@ -953,6 +956,13 @@ local roblox_decode_table;roblox_decode_table = {
 		local min = roblox_decode_table.v2(input);
 		input:remove(1); -- remove underscore
 		return Rect.new(min, roblox_decode_table.v2(input));
+	end,
+	ro = function(input) -- RotationCurveKey
+		local time = decode(input);
+		local value = decode(input);
+		local interpolation = KEY_INTERPOLATION_MODE[input:readDigit()];
+
+		return RotationCurveKey.new(time, value, interpolation);
 	end,
 	t = function(input) -- TweenInfo
 		local reverses = bitToBool(input:readDigit());
