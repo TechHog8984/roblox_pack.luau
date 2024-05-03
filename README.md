@@ -41,7 +41,7 @@ print(unpacked)
 - [x] ColorSequence
 - [x] ColorSequenceKeypoint
 - [x] DateTime
-- [ ] DockWidgetPluginGuiInfo
+- [ ] DockWidgetPluginGuiInfo - TODO
 - [x] Enum
 - [x] EnumItem
 - [x] Faces
@@ -53,17 +53,17 @@ print(unpacked)
 - [x] NumberSequenceKeypoint
 - [x] OverlapParams
 - [x] PathWaypoint
-- [ ] PhysicalProperties
-- [ ] Random
+- [ ] PhysicalProperties - TODO
+- [ ] Random - no way to transfer internal state besides seed
 - [x] Ray
 - [x] RaycastParams
 - [ ] RaycastResult
-- [ ] RBXScriptConnection
-- [ ] RBXScriptSignal
+- [ ] RBXScriptConnection - not constructable
+- [ ] RBXScriptSignal - not constructable
 - [x] Rect
-- [ ] Region3
-- [ ] Region3int16
-- [ ] SharedTable
+- [ ] Region3 - TODO
+- [ ] Region3int16 - TODO
+- [ ] SharedTable - TODO
 - [x] TweenInfo
 - [x] UDim
 - [x] UDim2
