@@ -65,8 +65,8 @@ print(unpacked)
 - [ ] Region3 - TODO
 - [ ] Region3int16 - TODO
 - [x] RotationCurveKey
-- [ ] Secret - Not applicable 
-- [ ] SharedTable - TODO
+- [ ] Secret - Not applicable
+- [x] SharedTable - TODO
 - [x] TweenInfo
 - [x] UDim
 - [x] UDim2

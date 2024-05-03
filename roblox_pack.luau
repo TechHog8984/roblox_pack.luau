@@ -671,6 +671,13 @@ local encode_table; encode_table = {
 	RotationCurveKey = function(value)
 		return "rro_" .. encode(value.Time) .. encode(value.Value) .. value.Interpolation.Value + 1;
 	end,
+	SharedTable = function(value)
+		local t = {};
+		for k,v in value do
+			t[k] = v;
+		end;
+		return "rs_" .. pack(t);
+	end,
 	TweenInfo = function(value)
 		return "rt_" .. boolToBit(value.Reverses) .. (value.EasingDirection.Value + 1) .. encode(value.EasingStyle.Value + 1) .. encode(value.Time) .. encode(value.DelayTime) .. encode(value.RepeatCount);
 	end,
@@ -963,6 +970,9 @@ local roblox_decode_table;roblox_decode_table = {
 		local interpolation = KEY_INTERPOLATION_MODE[input:readDigit()];
 
 		return RotationCurveKey.new(time, value, interpolation);
+	end,
+	s = function(input) -- SharedTable
+		return SharedTable.new(decode(input));
 	end,
 	t = function(input) -- TweenInfo
 		local reverses = bitToBool(input:readDigit());

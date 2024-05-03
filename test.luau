@@ -94,6 +94,36 @@ raycast_params.BruteForceAllSlow = true;
 add("RaycastParams", raycast_params);
 add("Rect", Rect.new(1, 2, 3, 4));
 add("RotationCurveKey", RotationCurveKey.new(0, CFrame.new(Random.new():NextUnitVector()), Enum.KeyInterpolationMode.Cubic));
+local function checkEqualTable(t1, t2)
+    for k,v in next, t1 do
+        if type(t2[k]) ~= type(v) or t2[k] ~= v then
+            return false;
+        end;
+    end;
+
+    for k,v in next, t2 do
+        if type(t1[k]) ~= type(v) or t1[k] ~= v then
+            return false;
+        end;
+    end;
+
+    return true;
+end;
+add("SharedTable", SharedTable.new({x = 1, y = 2, z = {"a", "b", "c"}}), function(original, unpacked)
+    for k,v in original do
+        if type(unpacked[k]) ~= type(v) and not (type(v) == "table" and checkEqualTable(unpacked[k], v) or unpacked[k] == v) then
+            print(k, unpacked[k], v);
+            return false;
+        end;
+    end;
+    for k,v in unpacked do
+        if type(original[k]) ~= type(v) and not (type(v) == "table" and checkEqualTable(original[k], v) or original[k] == v) then
+            print(k, original[k], v);
+            return false;
+        end;
+    end;
+    return true;
+end);
 add("TweenInfo", TweenInfo.new(1, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out, 2, true, 0.5));
 add("UDim", UDim.new(-10, 10));
 add("UDim2", UDim2.new(1, -10, 0, 10));
