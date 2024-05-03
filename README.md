@@ -52,6 +52,7 @@ print(unpacked)
 - [x] NumberSequence
 - [x] NumberSequenceKeypoint
 - [x] OverlapParams
+- [ ] Path2DControlPoint - TODO
 - [x] PathWaypoint
 - [ ] PhysicalProperties - TODO
 - [ ] Random - no way to transfer internal state besides seed
@@ -63,6 +64,8 @@ print(unpacked)
 - [x] Rect
 - [ ] Region3 - TODO
 - [ ] Region3int16 - TODO
+- [ ] RotationCurveKey - TODO
+- [ ] Secret - Not applicable 
 - [ ] SharedTable - TODO
 - [x] TweenInfo
 - [x] UDim
