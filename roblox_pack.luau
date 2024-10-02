@@ -234,7 +234,7 @@ local backslash_escape_map = {
 };
 local reverse_backslash_escape_map = {
 	a = '\a', b = '\b', f = '\f', n = '\n',
-	r = '\r', t = '\t', v = '\v', ['\\'] = '\\', 
+	r = '\r', t = '\t', v = '\v', ['\\'] = '\\',
 	[quote] = quote
 };
 
@@ -625,7 +625,7 @@ local encode_table; encode_table = {
 		if value == game then return "ri_game;"; end;
 		local path = '';
 		local name = value.Name;
-	
+
 		while value.Parent do
 			if iscDigit(name:sub(1,1)) or name:match("[^%w_]") then
 				name = `[{serialize(name)}]`;
@@ -636,7 +636,7 @@ local encode_table; encode_table = {
 			value = value.Parent;
 			name = value.Name;
 		end;
-	
+
 		return "ri_game" .. path .. ';';
 	end,
     NumberRange = function(value)
@@ -1072,6 +1072,7 @@ pack = function(...)
 
 	return packed;
 end;
+encode_table.table = pack
 
 local UNPACK_STATE = {
     START = 0,
